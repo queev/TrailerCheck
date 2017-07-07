@@ -34,7 +34,11 @@ namespace TrailerCheck.Controllers
             }
 
             var owner = await _context.Owners
+                .Include(o => o.Registrations)
+                    .ThenInclude(r => r.Trailer)
+                .AsNoTracking()
                 .SingleOrDefaultAsync(m => m.ID == id);
+
             if (owner == null)
             {
                 return NotFound();
@@ -54,13 +58,23 @@ namespace TrailerCheck.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,FirstName,LastName,RegistrationDate")] Owner owner)
+        public async Task<IActionResult> Create([Bind("FirstName,LastName,RegistrationDate")] Owner owner)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(owner);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    _context.Add(owner);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (DbUpdateException /* ex */)
+            {
+                //Log the error (uncomment ex variable name and write a log.
+                ModelState.AddModelError("", "Unable to save changes. " +
+                    "Try again, and if the problem persists " +
+                    "see your system administrator.");
             }
             return View(owner);
         }
@@ -84,40 +98,38 @@ namespace TrailerCheck.Controllers
         // POST: Owners/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,FirstName,LastName,RegistrationDate")] Owner owner)
+        public async Task<IActionResult> EditPost(int? id)
         {
-            if (id != owner.ID)
+            if (id == null)
             {
                 return NotFound();
             }
-
-            if (ModelState.IsValid)
+            var ownerToUpdate = await _context.Owners.SingleOrDefaultAsync(o => o.ID == id);
+            if (await TryUpdateModelAsync<Owner>(
+                ownerToUpdate,
+                "",
+                o => o.FirstName, o => o.LastName, o => o.RegistrationDate))
             {
                 try
                 {
-                    _context.Update(owner);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction("Index");
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateException /* ex */)
                 {
-                    if (!OwnerExists(owner.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    //Log the error (uncomment ex variable name and write a log.)
+                    ModelState.AddModelError("", "Unable to save changes. " +
+                        "Try again, and if the problem persists, " +
+                        "see your system administrator.");
                 }
-                return RedirectToAction("Index");
             }
-            return View(owner);
+            return View(ownerToUpdate);
         }
 
         // GET: Owners/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id, bool? saveChangesError = false)
         {
             if (id == null)
             {
@@ -125,10 +137,18 @@ namespace TrailerCheck.Controllers
             }
 
             var owner = await _context.Owners
+                .AsNoTracking()
                 .SingleOrDefaultAsync(m => m.ID == id);
             if (owner == null)
             {
                 return NotFound();
+            }
+
+            if (saveChangesError.GetValueOrDefault())
+            {
+                ViewData["ErrorMessage"] =
+                    "Delete failed. Try again, and if the problem persists " +
+                    "see your system administrator.";
             }
 
             return View(owner);
@@ -139,15 +159,25 @@ namespace TrailerCheck.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var owner = await _context.Owners.SingleOrDefaultAsync(m => m.ID == id);
-            _context.Owners.Remove(owner);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
-        }
+            var owner = await _context.Owners
+                .AsNoTracking()
+                .SingleOrDefaultAsync(m => m.ID == id);
+            if (owner == null)
+            {
+                return RedirectToAction("Index");
+            }
 
-        private bool OwnerExists(int id)
-        {
-            return _context.Owners.Any(e => e.ID == id);
+            try
+            {
+                _context.Owners.Remove(owner);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            catch (DbUpdateException /* ex */)
+            {
+                //Log the error (uncomment ex variable name and write a log.)
+                return RedirectToAction("Delete", new { id = id, saveChangesError = true });
+            }
         }
     }
 }

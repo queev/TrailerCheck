@@ -8,7 +8,7 @@ using TrailerCheck.Data;
 namespace TrailerCheck.Migrations
 {
     [DbContext(typeof(TrailerCheckContext))]
-    [Migration("20170705111750_Initial")]
+    [Migration("20170706162110_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
