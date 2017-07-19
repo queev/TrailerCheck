@@ -8,9 +8,10 @@ using TrailerCheck.Data;
 namespace TrailerCheck.Migrations
 {
     [DbContext(typeof(TrailerCheckContext))]
-    partial class TrailerCheckContextModelSnapshot : ModelSnapshot
+    [Migration("20170719100646_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -21,13 +22,9 @@ namespace TrailerCheck.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(50);
+                    b.Property<string>("FirstName");
 
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50);
+                    b.Property<string>("LastName");
 
                     b.Property<DateTime>("RegistrationDate");
 
