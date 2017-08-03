@@ -8,9 +8,10 @@ using TrailerCheck.Data;
 namespace TrailerCheck.Migrations
 {
     [DbContext(typeof(TrailerCheckContext))]
-    partial class TrailerCheckContextModelSnapshot : ModelSnapshot
+    [Migration("20170803095307_OwnerAddress")]
+    partial class OwnerAddress
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -26,6 +27,7 @@ namespace TrailerCheck.Migrations
                         .HasMaxLength(50);
 
                     b.Property<string>("AddressLine2")
+                        .IsRequired()
                         .HasMaxLength(50);
 
                     b.Property<string>("County")

@@ -58,7 +58,7 @@ namespace TrailerCheck.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FirstName,LastName,RegistrationDate")] Owner owner)
+        public async Task<IActionResult> Create([Bind("FirstName,LastName,RegistrationDate,AddressLine1,AddressLine2,Town,County")] Owner owner)
         {
             try
             {
@@ -110,7 +110,7 @@ namespace TrailerCheck.Controllers
             if (await TryUpdateModelAsync<Owner>(
                 ownerToUpdate,
                 "",
-                o => o.FirstName, o => o.LastName, o => o.RegistrationDate))
+                o => o.FirstName, o => o.LastName, o => o.RegistrationDate, o => o.AddressLine1, o =>o.AddressLine2, o =>o.Town, o => o.County))
             {
                 try
                 {

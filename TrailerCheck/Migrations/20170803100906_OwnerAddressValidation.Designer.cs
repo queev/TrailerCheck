@@ -8,9 +8,10 @@ using TrailerCheck.Data;
 namespace TrailerCheck.Migrations
 {
     [DbContext(typeof(TrailerCheckContext))]
-    partial class TrailerCheckContextModelSnapshot : ModelSnapshot
+    [Migration("20170803100906_OwnerAddressValidation")]
+    partial class OwnerAddressValidation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
