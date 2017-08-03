@@ -18,14 +18,8 @@ namespace TrailerCheck.Data
 
             var owners = new Owner[]
             {
-            new Owner{FirstName="Carson",LastName="Alexander",RegistrationDate=DateTime.Parse("2005-09-01")},
-            new Owner{FirstName="Meredith",LastName="Alonso",RegistrationDate=DateTime.Parse("2002-09-01")},
-            new Owner{FirstName="Arturo",LastName="Anand",RegistrationDate=DateTime.Parse("2003-09-01")},
-            new Owner{FirstName="Gytis",LastName="Barzdukas",RegistrationDate=DateTime.Parse("2002-09-01")},
-            new Owner{FirstName="Yan",LastName="Li",RegistrationDate=DateTime.Parse("2002-09-01")},
-            new Owner{FirstName="Peggy",LastName="Justice",RegistrationDate=DateTime.Parse("2001-09-01")},
-            new Owner{FirstName="Laura",LastName="Norman",RegistrationDate=DateTime.Parse("2003-09-01")},
-            new Owner{FirstName="Nino",LastName="Olivetto",RegistrationDate=DateTime.Parse("2005-09-01")}
+            new Owner{FirstName="Carson",LastName="Alexander",RegistrationDate=DateTime.Parse("2005-09-01"),AddressLine1="Street",AddressLine2="Estate",Town="Naas",County="Kildare"},
+            new Owner{FirstName="Meredith",LastName="Alonso",RegistrationDate=DateTime.Parse("2002-09-01"),AddressLine1="Street",AddressLine2="Estate",Town="Naas",County="Kildare"}
             };
             foreach (Owner o in owners)
             {
@@ -57,12 +51,6 @@ namespace TrailerCheck.Data
             new Registration{OwnerID=2, TrailerID=4},
             new Registration{OwnerID=2, TrailerID=5},
             new Registration{OwnerID=2, TrailerID=6},
-            new Registration{OwnerID=3, TrailerID=1},
-            new Registration{OwnerID=4, TrailerID=1},
-            new Registration{OwnerID=4, TrailerID=2},
-            new Registration{OwnerID=5, TrailerID=4},
-            new Registration{OwnerID=6, TrailerID=6},
-            new Registration{OwnerID=7, TrailerID=7},
             };
             foreach (Registration r in registrations)
             {
