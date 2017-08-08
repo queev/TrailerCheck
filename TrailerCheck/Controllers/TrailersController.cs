@@ -26,9 +26,11 @@ namespace TrailerCheck.Controllers
 
             var trailers = from t in _context.Trailers
                            select t;
-            if (!String.IsNullOrEmpty(searchString))
+            ViewBag.ShowList = false;
+            if (!String.IsNullOrWhiteSpace(searchString))
             {
-                trailers = trailers.Where(t => t.SerialNumber.Contains(searchString));
+                ViewBag.ShowList = true;
+                trailers = trailers.Where(t => t.SerialNumber.Equals(searchString));
             }
 
             return View(await trailers.AsNoTracking().ToListAsync());
